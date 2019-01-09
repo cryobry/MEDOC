@@ -30,9 +30,9 @@ def parallelize(file_to_download):
 		parameters = configparser.ConfigParser()
 		parameters.read('./configuration.cfg')
 
-		if file_to_download not in open(insert_log_path).read().splitlines():
+		if file_to_download not in open(inserted_log).read().splitlines():
 
-			#~ file_downloaded = MEDOC.download(file_name=file_to_download)  # Download file if not already
+			file_downloaded = MEDOC.download(file_name=file_to_download)  # Download file if not already
 			file_downloaded = file_to_download
 			articles = MEDOC.extract_articles(file_name=file_downloaded)  # Parse XML file to extract articles
 			
@@ -60,12 +60,12 @@ if __name__ == '__main__':
 	MEDOC = MEDOC.MEDOC()
 	parameters = configparser.ConfigParser()
 	parameters.read('./configuration.cfg')
-	insert_limit = int(parameters['database']['insert_command_limit'])
-	insert_log_path = os.path.join(parameters['paths']['program_path'], parameters['paths']['already_downloaded_files'])
+	#insert_limit = int(parameters['database']['insert_command_limit'])
+	inserted_log = parameters['paths']['inserted_log']
 
 	MEDOC.create_pubmedDB()  # Create database if not exist
-	#~ gz_file_list = MEDOC.get_file_list()  # Get file list on NCBI
+	gz_file_list = MEDOC.get_file_list()  # Get file list on NCBI
 	#~ gz_file_list = ['updatefiles/{}'.format(file_name) for file_name in os.listdir('/appli/deeplearning/EMERIC/MEDOC/pudmed_data/updatefiles/') if file_name.endswith('.gz')] + ['baseline/{}'.format(file_name) for file_name in os.listdir('/appli/deeplearning/EMERIC/MEDOC/pudmed_data/baseline/') if file_name.endswith('.gz')]
-	gz_file_list = ['updatefiles/pubmed18n1032.xml.gz']
+	#gz_file_list = ['updatefiles/pubmed18n1032.xml.gz']
 	with mp.Pool(processes=int(parameters['threads']['parallel_files'])) as pool:  # Parallelize
 		pool.map(parallelize, gz_file_list)

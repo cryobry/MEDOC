@@ -21,7 +21,7 @@ class Query_Executor:
 
 	def __init__(self, parameters):
 
-		self.log_file = os.path.join(parameters['paths']['program_path'], parameters['paths']['sql_error_log'])
+		self.log_file = parameters['paths']['sql_error_log']
 		self.config = {
 				'host': parameters['database']['host'],
 				'user': parameters['database']['user'],
